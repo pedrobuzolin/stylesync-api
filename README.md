@@ -302,7 +302,6 @@ O servidor **Gunicorn** é utilizado para executar a aplicação Flask em ambien
 * Autenticação via JWT
 * Variáveis sensíveis protegidas por `.env`
 * Banco de testes isolado com Mongomock
-* Conexão segura com MongoDB Atlas
 
 ---
 

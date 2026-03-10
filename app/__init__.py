@@ -5,7 +5,10 @@ def create_app(testing=False):
     app = Flask(__name__)
     app.config.from_object('config.Config')
 
-    init_db(app.config['MONGO_URI'], testing)
+    try:
+        init_db(app.config['MONGO_URI'], testing)
+    except Exception as e:
+        print(f'Erro ao realizar a conexao com o banco de dados. {e}')
 
     from .routes.main import main_bp
     from .routes.user_routes import user_bp
