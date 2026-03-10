@@ -1,15 +1,22 @@
 # StyleSync API
 
-API REST desenvolvida em Python para gerenciamento de usuários, produtos e vendas.
-O projeto simula o backend de um sistema de gestão para comércio, incluindo autenticação com JWT e upload de vendas via arquivo CSV.
+API REST desenvolvida em **Python** para gerenciamento de usuários, produtos e vendas.
 
-Este projeto foi desenvolvido com foco em **boas práticas de desenvolvimento backend**, incluindo testes automatizados, separação de responsabilidades e preparação para deploy.
+O projeto simula o backend de um sistema de gestão para comércio, incluindo autenticação com **JWT** e upload de vendas via **arquivo CSV**.
+
+Este projeto foi desenvolvido com foco em **boas práticas de desenvolvimento backend**, incluindo:
+
+* arquitetura organizada
+* testes automatizados
+* integração contínua (CI)
+* separação de responsabilidades
+* preparação para deploy
 
 ---
 
 # Arquitetura da Aplicação
 
-```id="s3s3qk"
+```
 Client
    ↓
 Flask API
@@ -31,6 +38,7 @@ A API é responsável por autenticação, gerenciamento de dados e processamento
 * Pydantic
 * Pytest
 * Mongomock (mock de banco para testes)
+* GitHub Actions (CI)
 
 ---
 
@@ -39,10 +47,12 @@ A API é responsável por autenticação, gerenciamento de dados e processamento
 * Autenticação de usuários com token JWT
 * Cadastro de usuários
 * Listagem de usuários (rota protegida)
-* Cadastro e listagem de produtos
+* Cadastro de produtos
+* Listagem de produtos
 * Upload de vendas via arquivo CSV
 * Testes automatizados da API
 * Mock de banco de dados para ambiente de testes
+* Integração contínua (CI)
 
 ---
 
@@ -50,34 +60,34 @@ A API é responsável por autenticação, gerenciamento de dados e processamento
 
 Clone o repositório:
 
-```id="snm9k0"
+```bash
 git clone https://github.com/seuusuario/stylesync-api.git
 cd stylesync-api
 ```
 
 Crie um ambiente virtual:
 
-```id="t57rk1"
+```bash
 python -m venv venv
 ```
 
-Ative o ambiente virtual:
+Ative o ambiente virtual.
 
-Windows
+Windows:
 
-```id="u3bn7c"
+```bash
 venv\Scripts\activate
 ```
 
-Linux / Mac
+Linux / Mac:
 
-```id="yj2e5b"
+```bash
 source venv/bin/activate
 ```
 
 Instale as dependências:
 
-```id="o7h7wk"
+```bash
 pip install -r requirements.txt
 ```
 
@@ -89,7 +99,7 @@ Crie um arquivo `.env` baseado no `.env.example`.
 
 Exemplo:
 
-```id="62xag4"
+```
 MONGO_URI=your_mongodb_connection_string
 SECRET_KEY=your_secret_key
 ```
@@ -102,13 +112,13 @@ Essas variáveis são utilizadas para conectar ao banco de dados e gerar os toke
 
 Execute o arquivo principal:
 
-```id="q3ezpc"
+```bash
 python run.py
 ```
 
 A API ficará disponível em:
 
-```id="3gyzz4"
+```
 http://localhost:5000
 ```
 
@@ -118,25 +128,45 @@ http://localhost:5000
 
 Para rodar os testes automatizados:
 
-```id="5kr2r1"
-pytest --cov
+```bash
+pytest
 ```
 
-Isso executará todos os testes do projeto e exibirá a cobertura de código.
+Os testes utilizam **mongomock**, permitindo simular o banco de dados sem necessidade de um MongoDB real.
+
+---
+
+# Integração Contínua (CI)
+
+Este projeto utiliza **GitHub Actions** para executar testes automaticamente.
+
+A pipeline roda sempre que ocorre:
+
+* push na branch `main`
+* abertura de pull request
+
+Etapas executadas na pipeline:
+
+1. Checkout do repositório
+2. Configuração do ambiente Python
+3. Instalação das dependências
+4. Execução dos testes automatizados com Pytest
+
+Isso garante que novas alterações no código não quebrem funcionalidades existentes.
 
 ---
 
 # Principais Endpoints
 
-### Health Check
+## Health Check
 
-```id="i3d0ud"
+```
 GET /
 ```
 
 Resposta:
 
-```id="9b40g9"
+```json
 {
   "message": "Bem vindo ao StyleSync!"
 }
@@ -144,15 +174,15 @@ Resposta:
 
 ---
 
-### Autenticação
+## Autenticação
 
-```id="t4pdfe"
+```
 POST /login
 ```
 
 Exemplo de requisição:
 
-```id="w4k3ya"
+```json
 {
   "username": "admin",
   "password": "123"
@@ -161,7 +191,7 @@ Exemplo de requisição:
 
 Resposta:
 
-```id="28p81j"
+```json
 {
   "access_token": "jwt_token"
 }
@@ -169,33 +199,33 @@ Resposta:
 
 ---
 
-### Usuários
+## Usuários
 
-```id="tgj3s8"
+```
 GET /users
 POST /user
 ```
 
 ---
 
-### Produtos
+## Produtos
 
-```id="3jpm6d"
+```
 GET /products
 POST /products
 ```
 
 ---
 
-### Upload de Vendas
+## Upload de Vendas
 
-```id="v9byrn"
+```
 POST /sales/upload
 ```
 
 Exemplo de CSV aceito:
 
-```id="xq4x4y"
+```
 date,product,quantity,price
 2025-01-01,produto a,2,10.50
 2025-01-02,produto b,4,5.40
@@ -205,17 +235,24 @@ date,product,quantity,price
 
 # Testes Automatizados
 
-Os testes da aplicação utilizam:
+A aplicação possui testes automatizados para garantir o funcionamento das principais funcionalidades.
+
+Os testes cobrem:
+
+* autenticação
+* rotas protegidas
+* criação de usuários
+* criação de produtos
+* upload de vendas via CSV
+
+Ferramentas utilizadas:
 
 * Pytest
-* Mongomock para simulação do MongoDB
-* Testes de autenticação
-* Testes de rotas protegidas
-* Testes de upload de arquivo CSV
+* Mongomock
 
-Exemplo de execução:
+Execução:
 
-```id="ttxfpr"
+```bash
 pytest
 ```
 
@@ -223,19 +260,15 @@ pytest
 
 # Segurança
 
-* Tokens JWT para autenticação
-* Variáveis sensíveis via ambiente (.env)
-* Banco de dados isolado para testes
+* Autenticação via JWT
+* Variáveis sensíveis protegidas por `.env`
+* Banco de testes isolado com Mongomock
 
 ---
 
 # Roadmap do Projeto
 
-Próximas melhorias planejadas:
+Melhorias planejadas:
 
-* Integração contínua (CI)
 * Deploy da API
 * Containerização com Docker
-* Documentação da API
-
----
