@@ -11,6 +11,7 @@ Este projeto foi desenvolvido com foco em **boas práticas de desenvolvimento ba
 * integração contínua (CI)
 * separação de responsabilidades
 * preparação para deploy
+* containerização com Docker
 
 ---
 
@@ -40,6 +41,7 @@ A API é responsável por autenticação, gerenciamento de dados e processamento
 * Mongomock (mock de banco para testes)
 * GitHub Actions (CI)
 * Gunicorn (servidor WSGI para produção)
+* Docker
 
 ---
 
@@ -54,6 +56,7 @@ A API é responsável por autenticação, gerenciamento de dados e processamento
 * Testes automatizados da API
 * Mock de banco de dados para ambiente de testes
 * Integração contínua (CI)
+* Containerização da aplicação com Docker
 
 ---
 
@@ -142,6 +145,33 @@ python run.py
 ```
 
 A API ficará disponível em:
+
+```
+http://localhost:5000
+```
+
+---
+
+# Executando com Docker
+
+A aplicação também pode ser executada utilizando **Docker**, garantindo um ambiente isolado e reproduzível.
+
+Primeiro construa a imagem:
+
+```bash
+docker build -t stylesync-api .
+```
+
+Depois execute o container:
+
+```bash
+docker run -p 5000:5000 \
+-e MONGO_URI="your_mongodb_connection_string" \
+-e SECRET_KEY="your_secret_key" \
+stylesync-api
+```
+
+A aplicação ficará disponível em:
 
 ```
 http://localhost:5000
@@ -309,4 +339,4 @@ O servidor **Gunicorn** é utilizado para executar a aplicação Flask em ambien
 
 Melhorias planejadas:
 
-* Containerização com Docker
+* Documentação da API com Swagger
