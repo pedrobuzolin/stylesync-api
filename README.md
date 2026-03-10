@@ -39,6 +39,7 @@ A API é responsável por autenticação, gerenciamento de dados e processamento
 * Pytest
 * Mongomock (mock de banco para testes)
 * GitHub Actions (CI)
+* Gunicorn (servidor WSGI para produção)
 
 ---
 
@@ -53,6 +54,30 @@ A API é responsável por autenticação, gerenciamento de dados e processamento
 * Testes automatizados da API
 * Mock de banco de dados para ambiente de testes
 * Integração contínua (CI)
+
+---
+
+# API Online
+
+A API está disponível publicamente em:
+
+```
+https://stylesync-api.onrender.com
+```
+
+Endpoint de teste:
+
+```
+GET /
+```
+
+Resposta esperada:
+
+```json
+{
+  "message": "Bem vindo ao StyleSync!"
+}
+```
 
 ---
 
@@ -108,7 +133,7 @@ Essas variáveis são utilizadas para conectar ao banco de dados e gerar os toke
 
 ---
 
-# Executando a Aplicação
+# Executando a Aplicação Localmente
 
 Execute o arquivo principal:
 
@@ -145,14 +170,14 @@ A pipeline roda sempre que ocorre:
 * push na branch `main`
 * abertura de pull request
 
-Etapas executadas na pipeline:
+Etapas executadas:
 
 1. Checkout do repositório
 2. Configuração do ambiente Python
 3. Instalação das dependências
 4. Execução dos testes automatizados com Pytest
 
-Isso garante que novas alterações no código não quebrem funcionalidades existentes.
+Isso garante que novas alterações não quebrem funcionalidades existentes da API.
 
 ---
 
@@ -258,11 +283,26 @@ pytest
 
 ---
 
+# Deploy
+
+O deploy da aplicação pode ser realizado em plataformas de hospedagem como **Render**.
+
+Comando utilizado para iniciar a aplicação em produção:
+
+```bash
+gunicorn run:app
+```
+
+O servidor **Gunicorn** é utilizado para executar a aplicação Flask em ambiente de produção.
+
+---
+
 # Segurança
 
 * Autenticação via JWT
 * Variáveis sensíveis protegidas por `.env`
 * Banco de testes isolado com Mongomock
+* Conexão segura com MongoDB Atlas
 
 ---
 
@@ -270,5 +310,4 @@ pytest
 
 Melhorias planejadas:
 
-* Deploy da API
 * Containerização com Docker
