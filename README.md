@@ -84,6 +84,24 @@ Resposta esperada:
 
 ---
 
+# Documentação da API
+
+A API possui documentação interativa utilizando Swagger (Flasgger).
+
+A documentação permite:
+
+visualizar todos os endpoints
+
+testar requisições diretamente pelo navegador
+
+visualizar parâmetros e respostas esperadas
+
+Acesse em:
+
+https://stylesync-api.onrender.com/apidocs
+
+---
+
 # Instalação
 
 Clone o repositório:
@@ -339,4 +357,4 @@ O servidor **Gunicorn** é utilizado para executar a aplicação Flask em ambien
 
 Melhorias planejadas:
 
-* Documentação da API com Swagger
+* Implementação de hash seguro de senhas
