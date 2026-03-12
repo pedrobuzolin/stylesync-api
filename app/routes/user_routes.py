@@ -4,6 +4,7 @@ from pydantic import ValidationError
 from app.database import get_db
 from bson import ObjectId
 from app.decorators import token_required
+from app.security import hash_password
 
 
 user_bp = Blueprint('user_bp', __name__)
@@ -76,11 +77,14 @@ def create_user():
     db = get_db()
 
     try:
-        user = User(**request.get_json())
+        user_raw = User(**request.get_json())
     except ValidationError as e:
         return jsonify({"error": e.errors()}), 400
     
-    result = db.users.insert_one(user.model_dump())
+    hashed_password = hash_password(user_raw.password)
+    user = user_raw.model_dump()
+    user["password"] = hashed_password
+    result = db.users.insert_one(user)
 
     return jsonify({"message": "Usuario cadastrado com sucesso!"}), 201
 

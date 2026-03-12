@@ -37,6 +37,7 @@ A API é responsável por autenticação, gerenciamento de dados e processamento
 * PyMongo
 * JWT Authentication
 * Pydantic
+* Bcrypt (hash seguro de senhas)
 * Pytest
 * Mongomock (mock de banco para testes)
 * GitHub Actions (CI)
@@ -48,7 +49,7 @@ A API é responsável por autenticação, gerenciamento de dados e processamento
 # Funcionalidades
 
 * Autenticação de usuários com token JWT
-* Cadastro de usuários
+* Cadastro de usuários com **hash seguro de senha**
 * Listagem de usuários (rota protegida)
 * Cadastro de produtos
 * Listagem de produtos
@@ -337,7 +338,7 @@ O deploy da aplicação pode ser realizado em plataformas de hospedagem como **R
 
 Comando utilizado para iniciar a aplicação em produção:
 
-```bash
+```
 gunicorn run:app
 ```
 
@@ -348,6 +349,7 @@ O servidor **Gunicorn** é utilizado para executar a aplicação Flask em ambien
 # Segurança
 
 * Autenticação via JWT
+* Senhas armazenadas utilizando **hash seguro com Bcrypt**
 * Variáveis sensíveis protegidas por `.env`
 * Banco de testes isolado com Mongomock
 
@@ -357,4 +359,6 @@ O servidor **Gunicorn** é utilizado para executar a aplicação Flask em ambien
 
 Melhorias planejadas:
 
-* Implementação de hash seguro de senhas
+* Paginação em endpoints de listagem
+* Melhor tratamento global de erros
+* Controle de permissões de usuário (roles)

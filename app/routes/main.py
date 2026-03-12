@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request, current_app
 from datetime import datetime, timedelta, timezone
 from pydantic import ValidationError
 from app.database import get_db
+from app.security import verify_password
 import jwt
 
 
@@ -78,7 +79,7 @@ def login():
     except Exception as e:
         return jsonify ({"error": "Erro durante a requisição do dado"}), 500
 
-    if user_data["password"] == raw_data["password"]:
+    if verify_password(raw_data["password"], user_data["password"]):
         token = jwt.encode(
             {
                 "user_id": user_data["username"],

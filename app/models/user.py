@@ -2,10 +2,6 @@ from pydantic import BaseModel, Field, ConfigDict
 from typing import Optional
 from bson import ObjectId
 
-class LoginPayLoad(BaseModel):
-    username: str
-    password: str
-
 class User(BaseModel):
     id: Optional[ObjectId] = Field(None, alias="_id")
     username: str
