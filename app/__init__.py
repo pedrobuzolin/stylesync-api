@@ -1,9 +1,13 @@
 from flask import Flask
 from app.database import init_db
+from flasgger import Swagger
+from app.swagger import swagger_config, swagger_template
 
 def create_app(testing=False):
     app = Flask(__name__)
     app.config.from_object('config.Config')
+
+    Swagger(app, config=swagger_config, template=swagger_template)
 
     try:
         init_db(app.config['MONGO_URI'], testing)

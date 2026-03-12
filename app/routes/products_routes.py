@@ -7,10 +7,33 @@ from app.decorators import token_required
 
 products_bp = Blueprint('products_bp', __name__)
 
-
 # RF: O sistema deve permitir a listagem de todos os produtos
 @products_bp.route('/products', methods=['GET'])
 def get_products():
+    """
+    Lista todos os produtos cadastrados
+    ---
+    tags:
+      - Produtos
+    responses:
+      200:
+        description: Lista de produtos
+        schema:
+          type: array
+          items:
+            properties:
+              id:
+                type: string
+              name:
+                type: string
+              price:
+                type: number
+              description:
+                type: string
+              stock: 
+                type: number
+    """
+
     db = get_db()
     products_cursor = db.products.find({})
     products_list = [ProductDBModel(**product).model_dump(by_alias=True, exclude_none=True) for product in products_cursor]
@@ -20,6 +43,48 @@ def get_products():
 @products_bp.route('/products', methods=['POST'])
 @token_required
 def create_product(token):
+    """
+    Cadastra novos produtos
+    ---
+    tags:
+      - Produtos
+    security:
+      - BearerAuth: []
+    parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          type: object
+          required:
+            - name
+            - price
+            - stock
+          properties:
+              name:
+                type: string
+                example: Produto A
+              price:
+                type: number
+                example: 10.95
+              description:
+                type: string
+                example: Produto A é um produto
+              stock: 
+                type: number
+                example: 2
+    responses:
+      201:
+        description: Produto cadastrado com sucesso!
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+            id:
+              type: string
+    """
+
     db = get_db()
 
     try:
@@ -32,14 +97,46 @@ def create_product(token):
     return jsonify({"message": "Produto cadastrado com sucesso!", "id": str(result.inserted_id)}), 201
 
 # RF: O sistema deve permitir a visualização dos detalhes de um único produto
-@products_bp.route('/product/<string:product_id>', methods=['GET'])
+@products_bp.route('/products/<string:product_id>', methods=['GET'])
 def get_product_by_id(product_id):
+    """
+    Retorna os detalhes de um produto específico
+    ---
+    tags:
+      - Produtos
+    parameters:
+      - name: product_id
+        in: path
+        required: true
+        type: string
+        description: ID do produto
+    responses:
+      200:
+        description: Produto encontrado
+        schema:
+          type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+            price:
+              type: number
+            description:
+              type: string
+            stock:
+              type: number
+      404:
+        description: Produto não encontrado
+      400:
+        description: ID inválido
+    """
     db = get_db()
 
     try:
         oid = ObjectId(product_id)
     except Exception as e:
-        jsonify({"error": f"Erro ao transformar o {product_id}"})
+        return jsonify({"error": f"Erro ao transformar o {product_id}"}), 400
     
     product = db.products.find_one({"_id": oid})
 
@@ -50,9 +147,59 @@ def get_product_by_id(product_id):
         return jsonify({"error": f"Produto com o ID:{product_id} - Não Encontrado"})
 
 # RF: O sistema deve permitir a atualização de um unico produto e produto existente
-@products_bp.route('/product/<string:product_id>', methods=['PUT'])
+@products_bp.route('/products/<string:product_id>', methods=['PUT'])
 @token_required
 def update_product_by_id(token, product_id):
+    """
+    Atualiza um produto existente
+    ---
+    tags:
+      - Produtos
+    security:
+      - BearerAuth: []
+    parameters:
+      - name: product_id
+        in: path
+        required: true
+        type: string
+        description: ID do produto
+      - in: body
+        name: body
+        required: true
+        schema:
+          type: object
+          properties:
+            name:
+              type: string
+              example: Produto Atualizado
+            price:
+              type: number
+              example: 15.90
+            description:
+              type: string
+              example: Nova descrição
+            stock:
+              type: number
+              example: 10
+    responses:
+      200:
+        description: Produto atualizado com sucesso
+        schema:
+          type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+            price:
+              type: number
+            description:
+              type: string
+            stock:
+              type: number
+      404:
+        description: Produto não encontrado
+    """
     db = get_db()
 
     try:
@@ -74,9 +221,30 @@ def update_product_by_id(token, product_id):
     return jsonify(ProductDBModel(**updated_product).model_dump(by_alias=True, exclude=None))
 
 # RF: O sistema deve permitir a delecao de um unico produto e produt existente
-@products_bp.route('/product/<string:product_id>', methods=['DELETE'])
+@products_bp.route('/products/<string:product_id>', methods=['DELETE'])
 @token_required
 def delete_product_by_id(token, product_id):
+    """
+    Remove um produto
+    ---
+    tags:
+      - Produtos
+    security:
+      - BearerAuth: []
+    parameters:
+      - name: product_id
+        in: path
+        required: true
+        type: string
+        description: ID do produto
+    responses:
+      204:
+        description: Produto removido com sucesso
+      404:
+        description: Produto não encontrado
+      400:
+        description: ID inválido
+    """
     db = get_db()
 
     try:

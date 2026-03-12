@@ -12,6 +12,25 @@ user_bp = Blueprint('user_bp', __name__)
 @user_bp.route('/users', methods=["GET"])
 @token_required
 def get_users(token):
+    """
+    Lista todos os usuários cadastrados
+    ---
+    tags:
+      - Usuários
+    security:
+      - BearerAuth: []
+    responses:
+      200:
+        description: Lista de usuários
+        schema:
+          type: array
+          items:
+            properties:
+              id:
+                type: string
+              username:
+                type: string
+    """
     db = get_db()
 
     try:
@@ -22,8 +41,38 @@ def get_users(token):
         return jsonify({"error": f"Erro ao retornar lista de usuarios."}), 500
 
 # RF: O Sistema deve permitir a criação de novos usuarios
-@user_bp.route('/user', methods=["POST"])
+@user_bp.route('/users', methods=["POST"])
 def create_user():
+    """
+    Cadastra um novo usuário
+    ---
+    tags:
+      - Usuários
+    parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          type: object
+          required:
+            - username
+            - password
+          properties:
+            username:
+              type: string
+              example: admin
+            password:
+              type: string
+              example: "123456"
+    responses:
+      201:
+        description: Usuário cadastrado com sucesso
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+    """
     db = get_db()
 
     try:
@@ -36,9 +85,28 @@ def create_user():
     return jsonify({"message": "Usuario cadastrado com sucesso!"}), 201
 
 # RF: O Sistema deve permitir a deleção de usuarios
-@user_bp.route('/user/<string:user_id>', methods=["DELETE"])
+@user_bp.route('/users/<string:user_id>', methods=["DELETE"])
 @token_required
 def delete_user_by_id(token, user_id):
+    """
+    Remove um usuário
+    ---
+    tags:
+      - Usuários
+    security:
+      - BearerAuth: []
+    parameters:
+      - name: user_id
+        in: path
+        required: true
+        type: string
+        description: ID do usuário
+    responses:
+      204:
+        description: Usuário removido com sucesso
+      404:
+        description: Usuário não encontrado
+    """
     db = get_db()
 
     try:

@@ -4,7 +4,6 @@ from app.database import get_db
 from app.models.sale import Sale
 from app.decorators import token_required
 import io
-import os
 import csv
 
 sales_bp = Blueprint('sales_bp', __name__)
@@ -13,6 +12,38 @@ sales_bp = Blueprint('sales_bp', __name__)
 @sales_bp.route('/sales/upload', methods=['POST'])
 @token_required
 def upload_sales(token):
+    """
+    Importa vendas a partir de um arquivo CSV
+    ---
+    tags:
+      - Vendas
+    security:
+      - BearerAuth: []
+    consumes:
+      - multipart/form-data
+    parameters:
+      - name: file
+        in: formData
+        type: file
+        required: true
+        description: Arquivo CSV contendo os dados das vendas
+    responses:
+      200:
+        description: Upload realizado com sucesso
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+            vendas importadas:
+              type: number
+            erros encontrados:
+              type: array
+              items:
+                type: string
+      400:
+        description: Arquivo inválido ou não enviado
+    """
     db = get_db()
 
     if 'file' not in request.files:
@@ -21,7 +52,7 @@ def upload_sales(token):
     file = request.files['file']
 
     if file.filename == '':
-        return jsonify({"error": "Nenhum arquivo selecionado"})
+        return jsonify({"error": "Nenhum arquivo selecionado"}), 404
     
     if file and file.filename.endswith('.csv'):
         csv_stream = io.StringIO(file.stream.read().decode('UTF-8'), newline=None)
@@ -38,7 +69,9 @@ def upload_sales(token):
                 errors.append(f'Linha {num_row} contem dados invalidos')
             except Exception:
                 errors.append(f'Linha {num_row} com erro inesperado nos dados')
-        
+    else:
+        return jsonify({"error": "Arquivo deve ser CSV"}), 400
+
     if sales_to_insert:
         try:
             db.sales.insert_many(sales_to_insert)
