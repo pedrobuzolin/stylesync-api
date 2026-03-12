@@ -17,7 +17,7 @@ def create_test_user(client):
         "password": "123"
     }
 
-    user = client.post("/user", json=user_data)
+    user = client.post("/users", json=user_data)
 
     return user_data
 

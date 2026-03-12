@@ -20,7 +20,7 @@ def test_create_user_sucess(client):
         "password": "abcd"
     }
 
-    response = client.post("/user", json=user_data)
+    response = client.post("/users", json=user_data)
 
     assert response.status_code == 201
     data = response.get_json()
@@ -32,6 +32,6 @@ def test_create_user_with_invalid_data(client):
         "pass": 123.4
     }
 
-    response = client.post("/user", json=user_data)
+    response = client.post("/users", json=user_data)
 
     assert response.status_code == 400
