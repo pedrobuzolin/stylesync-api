@@ -1,17 +1,28 @@
 # StyleSync API
 
-API REST desenvolvida em **Python** para gerenciamento de usuários, produtos e vendas.
+## 🔥 API de Gestão Comercial com Processamento de Vendas
 
-O projeto simula o backend de um sistema de gestão para comércio, incluindo autenticação com **JWT** e upload de vendas via **arquivo CSV**.
+API backend desenvolvida para simular um sistema real de gestão comercial, permitindo autenticação de usuários, controle de produtos e processamento de vendas, incluindo ingestão de dados via arquivos CSV.
 
-Este projeto foi desenvolvido com foco em **boas práticas de desenvolvimento backend**, incluindo:
+👉 O objetivo é resolver o problema de centralização e processamento de dados comerciais, preparando o sistema para cenários reais de uso.
 
-* arquitetura organizada
-* testes automatizados
-* integração contínua (CI)
-* separação de responsabilidades
-* preparação para deploy
-* containerização com Docker
+### ⚙️ Principais Funcionalidades
+
+* Autenticação segura com JWT
+
+* Cadastro e gerenciamento de usuários e produtos
+
+* Processamento de vendas
+
+* Upload e ingestão de dados via CSV
+
+* Testes automatizados com banco mock (Mongomock)
+
+* Integração contínua com GitHub Actions
+
+* Containerização com Docker
+
+* Deploy em ambiente de produção
 
 ---
 
